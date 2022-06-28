@@ -10,14 +10,26 @@ function App() {
     async function doLoad() {
       const data = await getPokemon();
 
-      console.log(data);
-      setPokemon(data);
+      
+      setPokemon(data.results);
     }
     doLoad();
   }, []);
   return (
     <div className="App">
+      <form>
+        <input />
+        <button>Search</button>
+      </form>
       <header className="App-header">
+        {
+          pokemon.map((poke, i) => <div
+            key={poke.pokemon + i}
+            className="pokemon">
+            <p>{poke.pokemon}</p>
+            <img src={poke.url_image} />
+          </div>)
+        }
         
       </header>
     </div>
