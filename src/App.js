@@ -6,19 +6,23 @@ import { useState } from 'react';
 function App() {
   const [pokemon, setPokemon] = useState([]);
   const [pokemonQuery, setPokemonQuery] = useState([]);
+  
+  async function fetchAndStorePokemon() {
+    const data = await getPokemon(pokemonQuery);
 
+    
+    setPokemon(data.results);
+  }
   useEffect(() => {
-    async function doLoad() {
-      const data = await getPokemon();
-
-      
-      setPokemon(data.results);
-    }
-    doLoad();
+    fetchAndStorePokemon();
   }, []);
   //define handle submit function
   async function handleSubmit(e) {
     e.preventDefault();
+
+    await fetchAndStorePokemon();
+
+    setPokemonQuery('');
 
     //use state data fron the input to find that specific pokemon
     //dump them in state
