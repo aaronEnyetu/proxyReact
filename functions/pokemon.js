@@ -10,7 +10,11 @@ const headers = {
 
 exports.handler = async (event, context) => {
   try {
-    const response = await fetch('https://pokedex-alchemy.herokuapp.com/api/pokedex?page=3&perPage=50');
+
+    console.log('query params', event.
+      queryStringParameters);
+      //fetch is how we make requests in node
+    const response = await fetch(`https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${event.queryStringParameters.pokeQuery}`);
     const data = await response.json();
     const json = JSON.stringify(data);
     console.log(response);
