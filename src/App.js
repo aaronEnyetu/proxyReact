@@ -1,53 +1,46 @@
-import { useEffect } from 'react';
-import { getPokemon } from './services/fetch-utils';
-import './App.css';
 import { useState } from 'react';
+import './App.css';
+import { getYelp } from './services/fetch-utils';
+import PokeSearch from './PokeSearch';
 
 function App() {
-  const [pokemon, setPokemon] = useState([]);
-  const [pokemonQuery, setPokemonQuery] = useState([]);
-  
-  async function fetchAndStorePokemon() {
-    const data = await getPokemon(pokemonQuery);
+  const [businesses, setBusinesses] = useState([]);
+  const [yelpQuery, setYelpQuery] = useState([]);
 
-    
-    setPokemon(data.results);
+
+
+  async function fetchAndStoreYelp() {
+    const data = await getYelp(yelpQuery);
+
+    setBusinesses(data.businesses);
   }
-  useEffect(() => {
-    fetchAndStorePokemon();
-  }, []);
-  //define handle submit function
-  async function handleSubmit(e) {
+
+  async function handleYelpSubmit(e) {
     e.preventDefault();
 
-    await fetchAndStorePokemon();
 
-    setPokemonQuery('');
+    // use state data from the input to find that specific pokemon
+    await fetchAndStoreYelp();
 
-    //use state data fron the input to find that specific pokemon
-    //dump them in state
-
+    setYelpQuery('');
   }
-  //to check state: console log pokemonQuery here
 
-  console.log(pokemonQuery);
+
   return (
     <div className="App">
-      <form on onSubmit={handleSubmit}>
-        <input onChange={e => setPokemonQuery(e.target.value)}/>
-        <button>Search</button>
-      </form>
-      <header className="App-header">
+      <PokeSearch />
+
+      <div className='yelp-search'>
+        <form onSubmit={handleYelpSubmit}>
+          <input onChange={e => setYelpQuery(e.target.value)} />
+          <button>Search</button>
+        </form>
         {
-          pokemon.map((poke, i) => <div
-            key={poke.pokemon + i}
-            className="pokemon">
-            <p>{poke.pokemon}</p>
-            <img src={poke.url_image} />
+          businesses.map((business, i) => <div key={business.name + i} className="business">
+            <p>{business.name}</p>
           </div>)
         }
-        
-      </header>
+      </div>
     </div>
   );
 }
