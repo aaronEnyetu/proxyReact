@@ -1,23 +1,46 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import { getYelp } from './services/fetch-utils';
+import PokeSearch from './PokeSearch';
 
 function App() {
+  const [businesses, setBusinesses] = useState([]);
+  const [yelpQuery, setYelpQuery] = useState([]);
+
+
+
+  async function fetchAndStoreYelp() {
+    const data = await getYelp(yelpQuery);
+
+    setBusinesses(data.businesses);
+  }
+
+  async function handleYelpSubmit(e) {
+    e.preventDefault();
+
+
+    // use state data from the input to find that specific pokemon
+    await fetchAndStoreYelp();
+
+    setYelpQuery('');
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <PokeSearch />
+
+      <div className='yelp-search'>
+        <form onSubmit={handleYelpSubmit}>
+          <input onChange={e => setYelpQuery(e.target.value)} />
+          <button>Search</button>
+        </form>
+        {
+          businesses.map((business, i) => <div key={business.name + i} className="business">
+            <p>{business.name}</p>
+          </div>)
+        }
+      </div>
     </div>
   );
 }
