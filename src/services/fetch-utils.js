@@ -17,4 +17,3 @@ export async function getYelp(filter) {
   return data;
 }
 
-//getWeather function goes here
